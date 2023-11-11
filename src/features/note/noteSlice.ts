@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
-type Note = {
+export type Note = {
   title: string
   content: string
   pinned: boolean

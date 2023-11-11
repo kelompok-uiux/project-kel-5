@@ -2,6 +2,7 @@
 import { addNote } from "@/features/note/noteSlice"
 import { useAppDispatch, useAppSelector } from "@/hooks"
 import React from "react"
+import AddNoteBar from "./AddNoteBar"
 
 const dummyNote = {
   title: "test",
@@ -15,6 +16,7 @@ const TestComponent = () => {
   const notes = useAppSelector((state) => state.note.notes)
   return (
     <div className="text-black">
+      <AddNoteBar />
       <button
         className="rounded-md bg-blue-200 p-2 shadow-xl"
         onClick={() => {
