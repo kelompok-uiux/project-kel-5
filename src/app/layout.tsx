@@ -6,6 +6,7 @@ import ReduxStateProvider from "./components/ReduxStateProvider"
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
+  display: "swap",
   variable: "--font-roboto",
 })
 

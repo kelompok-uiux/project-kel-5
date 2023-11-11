@@ -5,6 +5,7 @@ import "react-quill/dist/quill.snow.css"
 import { AiFillPushpin, AiOutlinePushpin } from "react-icons/ai"
 import { FiPlus } from "react-icons/fi"
 import { Note } from "@/features/note/noteSlice"
+import { format } from "path"
 
 const emptyNote = {
   title: "",
@@ -12,6 +13,44 @@ const emptyNote = {
   pinned: false,
   modalIsOpen: false,
 }
+
+const myColors = [
+  "purple",
+  "#785412",
+  "#452632",
+  "#856325",
+  "#963254",
+  "#254563",
+  "white",
+]
+
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [{ align: ["right", "center", "justify"] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link", "image"],
+    [{ color: myColors }],
+    [{ background: myColors }],
+  ],
+}
+
+const formats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+  "bullet",
+  "link",
+  "color",
+  "image",
+  "background",
+  "align",
+]
 
 const AddNoteBar = () => {
   const [newNote, setNewNote] = useState<Note>(emptyNote)
@@ -88,6 +127,8 @@ const AddNoteBar = () => {
             </div>
             <ReactQuill
               theme="snow"
+              modules={modules}
+              formats={formats}
               value={newNote.content}
               onChange={(value) => setNewNote({ ...newNote, content: value })}
               placeholder="Take a note..."
