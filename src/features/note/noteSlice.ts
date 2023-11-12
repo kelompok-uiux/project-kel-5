@@ -1,10 +1,12 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice, nanoid } from "@reduxjs/toolkit";
 
 export type Note = {
+  id: string
   title: string
   content: string
   pinned: boolean
-  modalIsOpen: boolean
+  lastEdited?: string
+  modalIsOpen?: boolean
 }
 
 type NoteState = {
@@ -20,6 +22,10 @@ const noteSlice = createSlice({
   initialState,
   reducers: {
     addNote: (state, action: PayloadAction<Note>) => {
+      action.payload.content =  action.payload.content.replace('<p>', '')
+      action.payload.content = action.payload.content.replace('</p>', '')
+      action.payload.id = nanoid()
+      action.payload.lastEdited = new Date().toISOString()
       state.notes.push(action.payload)
     },
     toggleModal: (state, action: PayloadAction<number>) => {
@@ -31,11 +37,22 @@ const noteSlice = createSlice({
     },
     editNote: (
       state,
-      action: PayloadAction<{ index: number; type: string; change: string }>
+      action: PayloadAction<Note>
     ) => {
-      // Sori gais :) gapaham hehe
-      ;(state.notes[action.payload.index] as any)[action.payload.type] =
-        action.payload.change
+      action.payload.content =  action.payload.content.replace('<p>', '')
+      action.payload.content = action.payload.content.replace('</p>', '')
+      const { id, title, content, pinned } = action.payload;
+      const lastEdited =  new Date().toISOString()
+      const postYangMauDiedit = state.notes.find(post => post.id === id);
+
+      if (postYangMauDiedit) {
+        postYangMauDiedit.title = title;
+        postYangMauDiedit.content = content;
+        postYangMauDiedit.lastEdited= lastEdited;
+        postYangMauDiedit.pinned = pinned;
+      }
+
+      
     },
     toggleNotePin: (state, action: PayloadAction<number>) => {
       state.notes[action.payload].pinned = !state.notes[action.payload].pinned
