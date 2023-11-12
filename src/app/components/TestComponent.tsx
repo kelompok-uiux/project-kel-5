@@ -1,8 +1,10 @@
 "use client"
 import { addNote } from "@/features/note/noteSlice"
 import { useAppDispatch, useAppSelector } from "@/hooks"
-import React from "react"
+import React, { useState } from "react"
 import AddNoteBar from "./AddNoteBar"
+import NoteCard from "./NoteCard"
+import NoteCardModal from "./NoteCardModal"
 
 const dummyNote = {
   title: "test",
@@ -13,7 +15,13 @@ const dummyNote = {
 
 const TestComponent = () => {
   const dispatch = useAppDispatch()
-  const notes = useAppSelector((state) => state.note.notes)
+  const notes = useAppSelector((state) => state.note.notes);
+  const [showModal, setShowModal] = useState(false);
+
+
+  const handleClose = (e: any) => {
+    if (e.target.id === 'wrapper') {setShowModal(false)}
+  }
   return (
     <div className="text-black">
       <AddNoteBar />
@@ -28,10 +36,19 @@ const TestComponent = () => {
 
       {notes.map((note, index) => {
         return (
-          <div key={note.content + index}>
-            <p className="text-xl font-bold">{note.title}</p>
-            <p>{note.content}</p>
+          <>
+          
+          <div     id="wrapper"  onClick={handleClose} >
+            <NoteCard index={index} title={note.title} content={note.content} 
+              clickModal={() => setShowModal(true)}/>
+                  
+            
+            <NoteCardModal index={index} title={note.title} content={note.content}  modalIsOpen={showModal}
+            onClose={() => setShowModal(false)}/>
+
           </div>
+        
+          </>
         )
       })}
     </div>

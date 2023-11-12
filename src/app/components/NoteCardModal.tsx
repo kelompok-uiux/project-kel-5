@@ -5,9 +5,17 @@ import dynamic from "next/dynamic";
 
 import "react-quill/dist/quill.snow.css";
 
+type ModalProps = {
+  index?: number
+  title?: string
+  content?: string
+  pinned?: boolean
+  modalIsOpen?: boolean
+  onClose: () => void;
+}
 
-
- const NoteCardModal =  () => {
+ const NoteCardModal = ( modalProps: ModalProps) => {
+  if (!modalProps.modalIsOpen)  {return null;}
   const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
 
 
@@ -50,7 +58,7 @@ import "react-quill/dist/quill.snow.css";
   ];
 
   const [value, setValue] = useState(
-    "Note"
+    modalProps.content
   );
 
   
@@ -62,7 +70,7 @@ import "react-quill/dist/quill.snow.css";
 
   // editing title
   const [isEditing, setIsEditing] = useState(false);
-  const [text, setText] = useState("Title");
+  const [text, setText] = useState(modalProps.content);
 
   const handleClick = () => {
     setIsEditing(true);
@@ -79,8 +87,15 @@ import "react-quill/dist/quill.snow.css";
   };
 
 
+  
+
+  const handleClose = (e: any) => {
+    if (e.target.id === 'wrapper') {modalProps.onClose();}
+  }
+
   return (
-    <div className="max-w-xl rounded shadow-lg bg-white m-4 p-4">
+    <div className="max-w-xl rounded shadow-lg bg-white m-4 p-4 fixed inset-0 z-10 overflow-y-auto  items-center justify-center " 
+       id="wrapper"  onClick={handleClose}>
       <div className="px-6 py-2 ">
 
         <div onClick={handleClick} >
@@ -128,7 +143,8 @@ import "react-quill/dist/quill.snow.css";
          
 
         </div>
-        <button className="bg-transparent hover:bg-gray-100 text-slate-900 font-semibold  py-2 px-4  hover:border-transparent rounded">
+        <button className="bg-transparent hover:bg-gray-100 text-slate-900 font-semibold  py-2 px-4  hover:border-transparent rounded"
+         onClick={() => modalProps.onClose()}>
           Close
         </button>
       </div>

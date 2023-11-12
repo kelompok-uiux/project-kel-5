@@ -4,8 +4,9 @@ import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 import { AiFillPushpin, AiOutlinePushpin } from "react-icons/ai"
 import { FiPlus } from "react-icons/fi"
-import { Note } from "@/features/note/noteSlice"
+import { Note, addNote } from "@/features/note/noteSlice"
 import { format } from "path"
+import { useAppDispatch } from "@/hooks"
 
 const emptyNote = {
   title: "",
@@ -55,6 +56,7 @@ const formats = [
 const AddNoteBar = () => {
   const [newNote, setNewNote] = useState<Note>(emptyNote)
   const [isFocused, setIsFocused] = useState(false)
+  const dispatch = useAppDispatch()
 
   const handleFocus = () => {
     setIsFocused(true)
@@ -64,6 +66,7 @@ const AddNoteBar = () => {
     setIsFocused(false)
     setNewNote(emptyNote)
     console.log(newNote)
+    dispatch(addNote(newNote))
   }
 
   const handlePin = () => {

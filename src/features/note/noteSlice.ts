@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export type Note = {
   title: string
@@ -20,6 +20,8 @@ const noteSlice = createSlice({
   initialState,
   reducers: {
     addNote: (state, action: PayloadAction<Note>) => {
+      action.payload.content =  action.payload.content.replace('<p>', '')
+      action.payload.content = action.payload.content.replace('</p>', '')
       state.notes.push(action.payload)
     },
     toggleModal: (state, action: PayloadAction<number>) => {
@@ -34,7 +36,7 @@ const noteSlice = createSlice({
       action: PayloadAction<{ index: number; type: string; change: string }>
     ) => {
       // Sori gais :) gapaham hehe
-      ;(state.notes[action.payload.index] as any)[action.payload.type] =
+      (state.notes[action.payload.index] as any)[action.payload.type] =
         action.payload.change
     },
     toggleNotePin: (state, action: PayloadAction<number>) => {
