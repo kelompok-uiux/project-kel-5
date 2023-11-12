@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice, nanoid } from "@reduxjs/toolkit";
 
 export type Note = {
-  id: string
+  id?: string
   title: string
   content: string
   pinned: boolean

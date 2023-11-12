@@ -19,9 +19,7 @@ const TestComponent = () => {
   const [showModal, setShowModal] = useState(false);
 
 
-  const handleClose = (e: any) => {
-    if (e.target.id === 'wrapper') {setShowModal(false)}
-  }
+
 
   return (
     <div className={`text-black`}>
@@ -31,12 +29,12 @@ const TestComponent = () => {
         return (
           <>
           
-          <div   id="wrapper"  onClick={handleClose} >
+          <div    >
             <NoteCard index={index} title={note.title} content={note.content} 
               clickModal={() => setShowModal(true)}/>
                   
             <div className="flex "  >
-              <NoteCardModal id={note.id} index={index} title={note.title} content={note.content}  modalIsOpen={showModal}
+              <NoteCardModal lastEdited={note.lastEdited} pinned={note.pinned} id={note.id} index={index} title={note.title} content={note.content}  modalIsOpen={showModal}
               onClose={() => setShowModal(false)}/>
             </div>
           </div>

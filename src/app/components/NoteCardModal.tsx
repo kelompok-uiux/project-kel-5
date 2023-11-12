@@ -1,19 +1,20 @@
 "use client"
 import { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from "next/dynamic";
-
+import moment from 'moment';
 
 import "react-quill/dist/quill.snow.css";
 import { useAppDispatch } from '@/hooks';
 import { editNote } from '@/features/note/noteSlice';
 
 type ModalProps = {
-  id: string 
+  id?: string 
   index?: number
   title: string
   content: string
   pinned: boolean
   modalIsOpen?: boolean
+  lastEdited: string
   onClose: () => void;
 }
 
@@ -21,6 +22,8 @@ type ModalProps = {
   if (!modalProps.modalIsOpen)  {return null;}
   const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
   const dispatch = useAppDispatch();
+  const date = new Date(modalProps.lastEdited);
+  const [lastedited, setLastEdited] = useState(date);
   
 
 
@@ -77,11 +80,12 @@ type ModalProps = {
 
   const handleClick = () => {
     setIsEditing(true);
-    dispatch(editNote({id: modalProps.id, title:  text, content: value, pinned: modalProps.pinned}))
+ 
   };
 
   const handleChange = (event: any) => {
     setText(event.target.value);
+    dispatch(editNote({id: modalProps.id, title:  text, content: value, pinned: modalProps.pinned}));
   };
 
   const handleBlur = () => {
@@ -98,10 +102,12 @@ type ModalProps = {
 
 
   
-
+  const handleClose = (e: any) => {
+    if (e.target.id === 'wrapper') { modalProps.onClose()}
+  }
   
   return (
-    <div className="bg-black bg-opacity-25 flex  fixed inset-0 z-10 overflow-y-auto  items-center justify-center ">
+    <div className="bg-black bg-opacity-25 flex  fixed inset-0 z-10 overflow-y-auto  items-center justify-center " id="wrapper"  onClick={handleClose}>
       <div className="max-w-xl rounded shadow-lg bg-white m-4 p-4"  >
         <div className="px-6 py-2 ">
 
@@ -142,7 +148,7 @@ type ModalProps = {
           
         </div>
         <div className="px-6 pt-4 pb-2">
-          <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Edited Nov 2</span>
+          <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Edited { moment(lastedited).format(' MMMM D Y hh:mm')}</span>
         </div>
 
         <div className="px-6 pt-4 pb-2 flex justify-between items-center">
