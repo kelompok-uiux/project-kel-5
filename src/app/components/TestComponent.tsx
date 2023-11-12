@@ -22,30 +22,23 @@ const TestComponent = () => {
   const handleClose = (e: any) => {
     if (e.target.id === 'wrapper') {setShowModal(false)}
   }
-  return (
-    <div className="text-black">
-      <AddNoteBar />
-      <button
-        className="rounded-md bg-blue-200 p-2 shadow-xl"
-        onClick={() => {
-          dispatch(addNote(dummyNote))
-        }}
-      >
-        Add dummy note
-      </button>
 
+  return (
+    <div className={`text-black`}>
+      <AddNoteBar />
+      
       {notes.map((note, index) => {
         return (
           <>
           
-          <div     id="wrapper"  onClick={handleClose} >
+          <div   id="wrapper"  onClick={handleClose} >
             <NoteCard index={index} title={note.title} content={note.content} 
               clickModal={() => setShowModal(true)}/>
                   
-            
-            <NoteCardModal index={index} title={note.title} content={note.content}  modalIsOpen={showModal}
-            onClose={() => setShowModal(false)}/>
-
+            <div className="flex "  >
+              <NoteCardModal id={note.id} index={index} title={note.title} content={note.content}  modalIsOpen={showModal}
+              onClose={() => setShowModal(false)}/>
+            </div>
           </div>
         
           </>
