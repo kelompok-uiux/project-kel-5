@@ -65,7 +65,6 @@ const AddNoteBar = () => {
   const handleAddNote = () => {
     setIsFocused(false)
     setNewNote(emptyNote)
-    console.log(newNote)
     dispatch(addNote(newNote))
   }
 

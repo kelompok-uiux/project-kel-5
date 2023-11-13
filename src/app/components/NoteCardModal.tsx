@@ -11,10 +11,13 @@ import dynamic from "next/dynamic"
 import moment from "moment"
 import ReactQuill from "react-quill"
 import { createPopper } from "@popperjs/core"
+import { useSelector } from "react-redux"
 
 import "react-quill/dist/quill.snow.css"
 import { useAppDispatch } from "@/hooks"
 import {
+  Note,
+  NoteState,
   changeNoteImage,
   changeOptionImage,
   editNote,
@@ -30,16 +33,19 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid"
 import React from "react"
 
 type ModalProps = {
-  id?: string
-  index?: number
-  title: string
-  content: string
-  pinned: boolean
-  modalIsOpen?: boolean
-  lastEdited?: string
+  // id?: string
+  // index?: number
+  // title: string
+  // content: string
+  // pinned: boolean
+  modalIsOpen?: {
+    noteId?: string
+  show: boolean
+  }
+  // lastEdited?: string
   onClose: () => void
-  noteImage?: string
-  optionColor?: string
+  // noteImage?: string
+  // optionColor?: string
 }
 
 type ImageData = {
@@ -147,11 +153,31 @@ const NoteCardModal = (modalProps: ModalProps) => {
   }
 
   const dispatch = useAppDispatch()
-  const date = new Date(modalProps.lastEdited ? modalProps.lastEdited : "")
+
+  const noteSelector = useSelector((state: any ) =>  {
+   
+    return state.note.notes.find((note: any ) => note.id === modalProps.modalIsOpen?.noteId)});
+
+
+  let note: any;
+  if (noteSelector){
+     note = noteSelector
+  }
+
+  
+
+  const date = new Date(note.lastEdited ? note.lastEdited : "")
   const [lastedited, setLastEdited] = useState(date)
   const [backgroundPick, setBackgroundPick] = useState(false)
-  const [selectedImage, setSelectedImage] = useState(modalProps.noteImage)
-  const [selectedOptionColor, setSelectedOptionColor] = useState(modalProps.optionColor)
+  const [selectedImage, setSelectedImage] = useState(note.noteImage)
+  const [selectedOptionColor, setSelectedOptionColor] = useState(note.optionColor)
+  const [value, setValue] = useState(note.content)
+
+  // editing title
+  const [isEditing, setIsEditing] = useState(false)
+  const [text, setText] = useState(note.title)
+  const [pinned, setPinned] = useState(note.pinned)
+
 
   const myColors = [
     "purple",
@@ -191,12 +217,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
     "align",
   ]
 
-  const [value, setValue] = useState(modalProps.content)
 
-  // editing title
-  const [isEditing, setIsEditing] = useState(false)
-  const [text, setText] = useState(modalProps.title)
-  const [pinned, setPinned] = useState(modalProps.pinned)
 
   const handleClick = () => {
     setIsEditing(true)
@@ -206,7 +227,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
     setText(event.target.value)
     dispatch(
       editNote({
-        id: modalProps.id,
+        id: note.id,
         title: text,
         content: value,
         pinned: pinned,
@@ -225,7 +246,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
     dispatch(
       editNote({
-        id: modalProps.id,
+        id: note.id,
         title: text,
         content: content,
         pinned: pinned,
@@ -235,11 +256,11 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
   const handlePin = () => {
     setPinned(!pinned)
-    dispatch(toggleNotePin(modalProps.id))
+    dispatch(toggleNotePin(note.id))
   }
 
   const handleDeleteNote = () => {
-    dispatch(removeNote(modalProps.id))
+    dispatch(removeNote(note.id))
   }
 
   const handleClose = (e: any) => {
@@ -386,7 +407,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
                               handleSetSelectedOptionColor(color.color)
                               dispatch(
                                 changeOptionImage({
-                                  id: modalProps.id,
+                                  id: note.id,
                                   color: color.color,
                                 })
                               )
@@ -415,14 +436,14 @@ const NoteCardModal = (modalProps: ModalProps) => {
                                 ? "border-purple-500"
                                 : "border-transparent"
                             }
-                            ${image.image == "bg-white" && selectedImage !== "bg-white" ? "border-2 border-slate-300":""}
+                            ${image.image == "bg-white" && selectedImage !== "bg-white" ? " border-slate-300":""}
                             `}
                             style={{ backgroundImage: `url(${image.image})` }}
                             onClick={() => {
                               selectImage(image.image)
                               dispatch(
                                 changeNoteImage({
-                                  id: modalProps.id,
+                                  id: note.id,
                                   color: image.image,
                                 })
                               )
