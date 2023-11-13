@@ -18,6 +18,7 @@ const config: Config = {
         sans: ["var(--font-roboto)", ...defaultTheme.fontFamily.sans],
       },
     },
+  
   },
   plugins: [],
 }
