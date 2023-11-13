@@ -38,8 +38,7 @@ const NoteCard = (
         
         </div>
         
-        <p className="block font-sans text-base font-light leading-relaxed text-inherit antialiased ">
-          {props.content}
+        <p dangerouslySetInnerHTML={{__html: props.content as any}} className="block font-sans text-base font-light leading-relaxed text-inherit antialiased ">
         </p>
 
         

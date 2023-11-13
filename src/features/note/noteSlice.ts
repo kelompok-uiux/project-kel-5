@@ -17,6 +17,7 @@ const initialState: NoteState = {
   notes: [],
 }
 
+
 const noteSlice = createSlice({
   name: "note",
   initialState,
@@ -32,8 +33,12 @@ const noteSlice = createSlice({
       state.notes[action.payload].modalIsOpen =
         !state.notes[action.payload].modalIsOpen
     },
-    removeNote: (state, action: PayloadAction<number>) => {
-      state.notes.splice(action.payload, 1)
+    removeNote: (state, action: PayloadAction<string | undefined>) => {
+    
+      state.notes =  state.notes.filter(({id}) => 
+         id !== action.payload
+      )
+     
     },
     editNote: (
       state,
@@ -54,8 +59,12 @@ const noteSlice = createSlice({
 
       
     },
-    toggleNotePin: (state, action: PayloadAction<number>) => {
-      state.notes[action.payload].pinned = !state.notes[action.payload].pinned
+    toggleNotePin: (state, action: PayloadAction<string | undefined>) => {
+      const postYangMauDiedit = state.notes.find(post => post.id === action.payload);
+     
+      if (postYangMauDiedit){
+        postYangMauDiedit.pinned = !postYangMauDiedit.pinned
+      }
     },
   },
 })
