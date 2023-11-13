@@ -11,7 +11,7 @@ export type Note = {
   optionColor?: string
 }
 
-type NoteState = {
+export type NoteState = {
   notes: Note[]
 }
 
