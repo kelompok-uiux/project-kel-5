@@ -34,7 +34,8 @@ const TestComponent = () => {
               clickModal={() => setShowModal(true)}/>
                   
             <div className="flex "  >
-              <NoteCardModal lastEdited={note.lastEdited} pinned={note.pinned} id={note.id} index={index} title={note.title} content={note.content}  modalIsOpen={showModal}
+              <NoteCardModal lastEdited={note.lastEdited} pinned={note.pinned} id={note.id} index={index} title={note.title} content={note.content} 
+               modalIsOpen={showModal}
               onClose={() => setShowModal(false)}/>
             </div>
           </div>
