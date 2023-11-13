@@ -1,0 +1,27 @@
+--- ada gambar / bagian note --- 
+recipes: https://www.gstatic.com/keep/backgrounds/recipe_light_thumb_0615.svg
+places: https://www.gstatic.com/keep/backgrounds/places_light_thumb_0615.svg
+groceries: https://www.gstatic.com/keep/backgrounds/grocery_light_thumb_0615.svg
+food: https://www.gstatic.com/keep/backgrounds/food_light_thumb_0615.svg
+music: https://www.gstatic.com/keep/backgrounds/music_light_thumb_0615.svg
+notes: https://www.gstatic.com/keep/backgrounds/notes_light_thumb_0615.svg
+travel: https://www.gstatic.com/keep/backgrounds/travel_light_thumb_0615.svg
+video: https://www.gstatic.com/keep/backgrounds/video_light_thumb_0615.svg
+celebration: https://www.gstatic.com/keep/backgrounds/celebration_light_thumb_0715.svg
+
+
+--- bagian bawah/option ---
+white/default
+coral #faafa8
+peach #f39f76
+sand   #fff8b8
+mint    #e2f6d3
+sage     #b4ddd3
+fog     #d4e4ed
+storm   #aeccdc
+dusk    #d3bfdb
+blossom    #f6e2dd
+clay    #e9e3d4
+chalk      #efeff1
+
+
