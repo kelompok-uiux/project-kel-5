@@ -16,6 +16,9 @@ type  NoteData =  {
   pinned?: boolean
   modalIsOpen?: boolean
   clickModal: () =>  void 
+  noteImage?: string 
+  optionColor?: string
+
 }
 
 

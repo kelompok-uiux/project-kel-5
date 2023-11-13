@@ -7,6 +7,8 @@ export type Note = {
   pinned: boolean
   lastEdited?: string
   modalIsOpen?: boolean
+  noteImage?: string 
+  optionColor?: string
 }
 
 type NoteState = {
@@ -27,6 +29,8 @@ const noteSlice = createSlice({
       action.payload.content = action.payload.content.replace('</p>', '')
       action.payload.id = nanoid()
       action.payload.lastEdited = new Date().toISOString()
+      action.payload.noteImage = "bg-white"
+      action.payload.optionColor = "bg-white"
       state.notes.push(action.payload)
     },
     toggleModal: (state, action: PayloadAction<number>) => {
@@ -46,7 +50,7 @@ const noteSlice = createSlice({
     ) => {
       action.payload.content =  action.payload.content.replace('<p>', '')
       action.payload.content = action.payload.content.replace('</p>', '')
-      const { id, title, content, pinned } = action.payload;
+      const { id, title, content, pinned, } = action.payload;
       const lastEdited =  new Date().toISOString()
       const postYangMauDiedit = state.notes.find(post => post.id === id);
 
@@ -66,9 +70,21 @@ const noteSlice = createSlice({
         postYangMauDiedit.pinned = !postYangMauDiedit.pinned
       }
     },
+    changeNoteImage: (state, action: PayloadAction<{id: string | undefined, color: string}> ) => {
+      const postYangMauDiedit = state.notes.find(post => post.id === action.payload.id);
+      if (postYangMauDiedit){
+        postYangMauDiedit.noteImage = action.payload.color
+      }
+    },
+    changeOptionImage: (state, action: PayloadAction<{id: string | undefined, color: string}> ) => {
+      const postYangMauDiedit = state.notes.find(post => post.id === action.payload.id);
+      if (postYangMauDiedit){
+        postYangMauDiedit.optionColor = action.payload.color
+      }
+    }
   },
 })
 
-export const { addNote, toggleModal, removeNote, editNote, toggleNotePin } =
+export const { addNote, toggleModal, removeNote, editNote, toggleNotePin, changeNoteImage, changeOptionImage } =
   noteSlice.actions
 export default noteSlice.reducer

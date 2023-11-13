@@ -35,7 +35,7 @@ const TestComponent = () => {
                   
             <div className="flex "  >
               <NoteCardModal lastEdited={note.lastEdited} pinned={note.pinned} id={note.id} index={index} title={note.title} content={note.content} 
-               modalIsOpen={showModal}
+               modalIsOpen={showModal} noteImage={note.noteImage}  optionColor={note.optionColor}
               onClose={() => setShowModal(false)}/>
             </div>
           </div>
