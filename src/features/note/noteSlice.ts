@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice, nanoid } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice, nanoid } from "@reduxjs/toolkit"
 
 export type Note = {
   id?: string
@@ -7,7 +7,7 @@ export type Note = {
   pinned: boolean
   lastEdited?: string
   modalIsOpen?: boolean
-  noteImage?: string 
+  noteImage?: string
   optionColor?: string
 }
 
@@ -19,14 +19,13 @@ const initialState: NoteState = {
   notes: [],
 }
 
-
 const noteSlice = createSlice({
   name: "note",
   initialState,
   reducers: {
     addNote: (state, action: PayloadAction<Note>) => {
-      action.payload.content =  action.payload.content.replace('<p>', '')
-      action.payload.content = action.payload.content.replace('</p>', '')
+      action.payload.content = action.payload.content.replace("<p>", "")
+      action.payload.content = action.payload.content.replace("</p>", "")
       action.payload.id = nanoid()
       action.payload.lastEdited = new Date().toISOString()
       action.payload.noteImage = "bg-white"
@@ -38,53 +37,63 @@ const noteSlice = createSlice({
         !state.notes[action.payload].modalIsOpen
     },
     removeNote: (state, action: PayloadAction<string | undefined>) => {
-    
-      state.notes =  state.notes.filter(({id}) => 
-         id !== action.payload
-      )
-     
+      state.notes = state.notes.filter(({ id }) => id !== action.payload)
     },
-    editNote: (
-      state,
-      action: PayloadAction<Note>
-    ) => {
-      action.payload.content =  action.payload.content.replace('<p>', '')
-      action.payload.content = action.payload.content.replace('</p>', '')
-      const { id, title, content, pinned, } = action.payload;
-      const lastEdited =  new Date().toISOString()
-      const postYangMauDiedit = state.notes.find(post => post.id === id);
+    editNote: (state, action: PayloadAction<Note>) => {
+      action.payload.content = action.payload.content.replace("<p>", "")
+      action.payload.content = action.payload.content.replace("</p>", "")
+      const { id, title, content, pinned } = action.payload
+      const lastEdited = new Date().toISOString()
+      const postYangMauDiedit = state.notes.find((post) => post.id === id)
 
       if (postYangMauDiedit) {
-        postYangMauDiedit.title = title;
-        postYangMauDiedit.content = content;
-        postYangMauDiedit.lastEdited= lastEdited;
-        postYangMauDiedit.pinned = pinned;
+        postYangMauDiedit.title = title
+        postYangMauDiedit.content = content
+        postYangMauDiedit.lastEdited = lastEdited
+        postYangMauDiedit.pinned = pinned
       }
-
-      
     },
     toggleNotePin: (state, action: PayloadAction<string | undefined>) => {
-      const postYangMauDiedit = state.notes.find(post => post.id === action.payload);
-     
-      if (postYangMauDiedit){
+      const postYangMauDiedit = state.notes.find(
+        (post) => post.id === action.payload
+      )
+
+      if (postYangMauDiedit) {
         postYangMauDiedit.pinned = !postYangMauDiedit.pinned
       }
     },
-    changeNoteImage: (state, action: PayloadAction<{id: string | undefined, color: string}> ) => {
-      const postYangMauDiedit = state.notes.find(post => post.id === action.payload.id);
-      if (postYangMauDiedit){
+    changeNoteImage: (
+      state,
+      action: PayloadAction<{ id: string | undefined; color: string }>
+    ) => {
+      const postYangMauDiedit = state.notes.find(
+        (post) => post.id === action.payload.id
+      )
+      if (postYangMauDiedit) {
         postYangMauDiedit.noteImage = action.payload.color
       }
     },
-    changeOptionImage: (state, action: PayloadAction<{id: string | undefined, color: string}> ) => {
-      const postYangMauDiedit = state.notes.find(post => post.id === action.payload.id);
-      if (postYangMauDiedit){
+    changeOptionImage: (
+      state,
+      action: PayloadAction<{ id: string | undefined; color: string }>
+    ) => {
+      const postYangMauDiedit = state.notes.find(
+        (post) => post.id === action.payload.id
+      )
+      if (postYangMauDiedit) {
         postYangMauDiedit.optionColor = action.payload.color
       }
-    }
+    },
   },
 })
 
-export const { addNote, toggleModal, removeNote, editNote, toggleNotePin, changeNoteImage, changeOptionImage } =
-  noteSlice.actions
+export const {
+  addNote,
+  toggleModal,
+  removeNote,
+  editNote,
+  toggleNotePin,
+  changeNoteImage,
+  changeOptionImage,
+} = noteSlice.actions
 export default noteSlice.reducer

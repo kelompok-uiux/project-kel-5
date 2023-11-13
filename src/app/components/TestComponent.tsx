@@ -42,7 +42,7 @@ const TestComponent = () => {
                   }
                 />
 
-                { showModal.show?
+                {showModal.show ? (
                   <div className="flex ">
                     <NoteCardModal
                       // lastEdited={note.lastEdited}
@@ -58,8 +58,10 @@ const TestComponent = () => {
                         setShowModal({ ...showModal, show: false })
                       }
                     />
-                  </div>: ""
-                }
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             </>
           )

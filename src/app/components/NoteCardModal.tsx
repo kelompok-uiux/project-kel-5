@@ -40,7 +40,7 @@ type ModalProps = {
   // pinned: boolean
   modalIsOpen?: {
     noteId?: string
-  show: boolean
+    show: boolean
   }
   // lastEdited?: string
   onClose: () => void
@@ -110,41 +110,41 @@ type OptionColorData = {
 
 const optionColors = [
   {
-    color: "bg-white"
+    color: "bg-white",
   },
   {
     color: "bg-[#faafa8]",
   },
   {
-    color: "bg-[#f39f76]"
+    color: "bg-[#f39f76]",
   },
   {
-    color: "bg-[#fff8b8]"
+    color: "bg-[#fff8b8]",
   },
   {
-    color: "bg-[#e2f6d3]"
+    color: "bg-[#e2f6d3]",
   },
   {
-    color: "bg-[#b4ddd3]"
+    color: "bg-[#b4ddd3]",
   },
   {
-    color: "bg-[#d4e4ed]"
+    color: "bg-[#d4e4ed]",
   },
   {
-    color: "bg-[#aeccdc]"
+    color: "bg-[#aeccdc]",
   },
   {
-    color: "bg-[#d3bfdb]"
+    color: "bg-[#d3bfdb]",
   },
   {
-    color: "bg-[#f6e2dd]"
+    color: "bg-[#f6e2dd]",
   },
   {
-    color: "bg-[#e9e3d4]"
+    color: "bg-[#e9e3d4]",
   },
   {
-    color: "bg-[#efeff1]"
-  }
+    color: "bg-[#efeff1]",
+  },
 ]
 
 const NoteCardModal = (modalProps: ModalProps) => {
@@ -154,30 +154,30 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
   const dispatch = useAppDispatch()
 
-  const noteSelector = useSelector((state: any ) =>  {
-   
-    return state.note.notes.find((note: any ) => note.id === modalProps.modalIsOpen?.noteId)});
+  const noteSelector = useSelector((state: any) => {
+    return state.note.notes.find(
+      (note: any) => note.id === modalProps.modalIsOpen?.noteId
+    )
+  })
 
-
-  let note: any;
-  if (noteSelector){
-     note = noteSelector
+  let note: any
+  if (noteSelector) {
+    note = noteSelector
   }
-
-  
 
   const date = new Date(note.lastEdited ? note.lastEdited : "")
   const [lastedited, setLastEdited] = useState(date)
   const [backgroundPick, setBackgroundPick] = useState(false)
   const [selectedImage, setSelectedImage] = useState(note.noteImage)
-  const [selectedOptionColor, setSelectedOptionColor] = useState(note.optionColor)
+  const [selectedOptionColor, setSelectedOptionColor] = useState(
+    note.optionColor
+  )
   const [value, setValue] = useState(note.content)
 
   // editing title
   const [isEditing, setIsEditing] = useState(false)
   const [text, setText] = useState(note.title)
   const [pinned, setPinned] = useState(note.pinned)
-
 
   const myColors = [
     "purple",
@@ -216,8 +216,6 @@ const NoteCardModal = (modalProps: ModalProps) => {
     "background",
     "align",
   ]
-
-
 
   const handleClick = () => {
     setIsEditing(true)
@@ -278,9 +276,8 @@ const NoteCardModal = (modalProps: ModalProps) => {
     // Additional logic to handle the background change can be implemented here
   }
 
-  const handleSetSelectedOptionColor= (color: any) => {
-    setSelectedOptionColor(color);
-
+  const handleSetSelectedOptionColor = (color: any) => {
+    setSelectedOptionColor(color)
   }
 
   const imageStyle: CSS.Properties = {
@@ -356,7 +353,9 @@ const NoteCardModal = (modalProps: ModalProps) => {
           </span>
         </div>
         {/* border-t border-solid border-t-white border-1 */}
-        <div className={`flex  items-center justify-start ${selectedOptionColor}`}>
+        <div
+          className={`flex  items-center justify-start ${selectedOptionColor}`}
+        >
           <div className="px-6 ">
             <FaTrash
               onClick={handleDeleteNote}
@@ -401,7 +400,12 @@ const NoteCardModal = (modalProps: ModalProps) => {
                                 : "border-transparent"
                             }
                             ${color.color}
-                            ${color.color == "bg-white" && selectedOptionColor !== "bg-white" ? " border-slate-300": ""}
+                            ${
+                              color.color == "bg-white" &&
+                              selectedOptionColor !== "bg-white"
+                                ? " border-slate-300"
+                                : ""
+                            }
                             `}
                             onClick={() => {
                               handleSetSelectedOptionColor(color.color)
@@ -421,12 +425,12 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
                 <div className="flex items-center">
                   <hr className="flex-grow border-t border-gray-300" />
-                  
+
                   <hr className="flex-grow border-t border-gray-300" />
                 </div>
 
                 <div className="flex items-center justify-center space-x-2  py-2">
-                {
+                  {
                     images.map((image: ImageData) => {
                       return (
                         <>
@@ -436,7 +440,12 @@ const NoteCardModal = (modalProps: ModalProps) => {
                                 ? "border-purple-500"
                                 : "border-transparent"
                             }
-                            ${image.image == "bg-white" && selectedImage !== "bg-white" ? " border-slate-300":""}
+                            ${
+                              image.image == "bg-white" &&
+                              selectedImage !== "bg-white"
+                                ? " border-slate-300"
+                                : ""
+                            }
                             `}
                             style={{ backgroundImage: `url(${image.image})` }}
                             onClick={() => {
