@@ -261,6 +261,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
   const handleDeleteNote = () => {
     dispatch(removeNote(note.id))
+    modalProps.onClose()
   }
 
   const handleClose = (e: any) => {
