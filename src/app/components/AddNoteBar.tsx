@@ -6,7 +6,7 @@ import { AiFillPushpin, AiOutlinePushpin } from "react-icons/ai"
 import { FiPlus } from "react-icons/fi"
 import { Note, addNote } from "@/features/note/noteSlice"
 import { format } from "path"
-import { useAppDispatch } from "@/hooks"
+import { useAppDispatch } from "@/hooks/hooks"
 
 const emptyNote = {
   title: "",

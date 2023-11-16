@@ -14,7 +14,7 @@ import { createPopper } from "@popperjs/core"
 import { useSelector } from "react-redux"
 
 import "react-quill/dist/quill.snow.css"
-import { useAppDispatch } from "@/hooks"
+import { useAppDispatch } from "@/hooks/hooks"
 import {
   Note,
   NoteState,

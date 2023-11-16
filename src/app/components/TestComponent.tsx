@@ -1,6 +1,6 @@
 "use client"
 import { addNote } from "@/features/note/noteSlice"
-import { useAppDispatch, useAppSelector } from "@/hooks"
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks"
 import React, { useState } from "react"
 import AddNoteBar from "./AddNoteBar"
 import NoteCard from "./NoteCard"
