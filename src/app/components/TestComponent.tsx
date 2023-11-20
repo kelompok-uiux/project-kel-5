@@ -4,25 +4,11 @@ import React, { useState } from "react"
 import AddNoteBar from "./AddNoteBar"
 import NoteCard from "./NoteCard"
 import NoteCardModal from "./NoteCardModal"
-import dynamic from "next/dynamic"
-
-
-
-const dummyNote = {
-  title: "test",
-  content: "test",
-  pinned: false,
-  modalIsOpen: false,
-}
 
 type ModalState = {
   noteId?: string
   show: boolean
 }
-
-const isSSR =() => typeof window === 'undefined';
-
-
 
 const TestComponent = () => {
   const dispatch = useAppDispatch()
@@ -32,10 +18,8 @@ const TestComponent = () => {
   } as ModalState)
 
   return (
-   
     <div className={`text-black`}>
-      
-       <AddNoteBar />
+      <AddNoteBar />
       <div className="flex flex-col">
         {notes.map((note, index) => {
           return (
@@ -53,9 +37,7 @@ const TestComponent = () => {
                 {showModal.show ? (
                   <div className="flex ">
                     <NoteCardModal
-                     
                       modalIsOpen={showModal}
-                      
                       onClose={() =>
                         setShowModal({ ...showModal, show: false })
                       }
@@ -69,8 +51,6 @@ const TestComponent = () => {
           )
         })}
       </div>
-      
-      
     </div>
   )
 }
