@@ -5,7 +5,7 @@ import { SiPinboard } from "react-icons/si"
 import { TiTrash } from "react-icons/ti"
 import { MdContentCopy } from "react-icons/md"
 import React from "react"
-// import "react-quill/dist/quill.snow.css"
+
 interface NoteProps {
   newNote: (component: any) => any
 }
@@ -37,7 +37,9 @@ const NoteCard = (props: NoteData) => {
 
         <p
           dangerouslySetInnerHTML={{ __html: props.content as any }}
+
           className="ql-editor block font-sans text-base  leading-relaxed text-inherit antialiased "
+
         ></p>
       </div>
     </div>

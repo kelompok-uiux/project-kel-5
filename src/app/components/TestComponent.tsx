@@ -51,7 +51,7 @@ const TestComponent = () => {
                   }
                 />
 
-                { showModal.show?
+                {showModal.show ? (
                   <div className="flex ">
                     <NoteCardModal
                      
@@ -61,8 +61,10 @@ const TestComponent = () => {
                         setShowModal({ ...showModal, show: false })
                       }
                     />
-                  </div>: ""
-                }
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             </>
           )
