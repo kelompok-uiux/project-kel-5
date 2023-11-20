@@ -9,7 +9,6 @@ import {
 } from "react"
 import dynamic from "next/dynamic"
 import moment from "moment"
-import ReactQuill from "react-quill"
 import { createPopper } from "@popperjs/core"
 import { useSelector } from "react-redux"
 
@@ -31,21 +30,20 @@ import music from "../../../public/backgroundImageNote/music.svg"
 import { Listbox, Popover, Transition } from "@headlessui/react"
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid"
 import React from "react"
+import { sendMessage } from "@/utils/sendMessage"
+
+import { ContentState, EditorState, RawDraftContentBlock, RawDraftContentState } from "draft-js"
+
 
 type ModalProps = {
-  // id?: string
-  // index?: number
-  // title: string
-  // content: string
-  // pinned: boolean
+ 
   modalIsOpen?: {
     noteId?: string
     show: boolean
   }
-  // lastEdited?: string
+  
   onClose: () => void
-  // noteImage?: string
-  // optionColor?: string
+
 }
 
 type ImageData = {
@@ -148,10 +146,7 @@ const optionColors = [
 ]
 
 const NoteCardModal = (modalProps: ModalProps) => {
-  if (!modalProps.modalIsOpen) {
-    return null
-  }
-
+ 
   const dispatch = useAppDispatch()
 
   const noteSelector = useSelector((state: any) => {
@@ -169,15 +164,30 @@ const NoteCardModal = (modalProps: ModalProps) => {
   const [lastedited, setLastEdited] = useState(date)
   const [backgroundPick, setBackgroundPick] = useState(false)
   const [selectedImage, setSelectedImage] = useState(note.noteImage)
-  const [selectedOptionColor, setSelectedOptionColor] = useState(
-    note.optionColor
-  )
-  const [value, setValue] = useState(note.content)
+
+  const [selectedOptionColor, setSelectedOptionColor] = useState(note.optionColor)
+  const [value, setValue] = useState(note.content);
+
+  
+  // const contentBlock = htmlToDraft
+//   const contentState = ContentState.createFromText(value);
+// const [editorState, setEditorState] = useState(EditorState.createWithContent(contentState));
+
+const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
 
   // editing title
   const [isEditing, setIsEditing] = useState(false)
   const [text, setText] = useState(note.title)
   const [pinned, setPinned] = useState(note.pinned)
+
+
+  
+  if (!modalProps.modalIsOpen) {
+    // jika modalNotecard tidak open return null
+    return null
+  }
+
+
 
   const myColors = [
     "purple",
@@ -191,10 +201,9 @@ const NoteCardModal = (modalProps: ModalProps) => {
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
+      ["bold", "italic", "underline", "strike"],
       [{ align: ["right", "center", "justify"] }],
       [{ list: "ordered" }, { list: "bullet" }],
-      [{ script: "sub" }, { script: "super" }],
       ["link", "image"],
       [{ color: myColors }],
       [{ background: myColors }],
@@ -238,10 +247,13 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
     // Save the changes or perform any required actions here
   }
+  const promptGPT = "@ChatGPT ";
 
-  const handleProcedureContentChange = (content: any) => {
+
+  const handleProcedureContentChange = async (content: any) => {
     setValue(content)
-
+    
+    
     dispatch(
       editNote({
         id: note.id,
@@ -250,6 +262,19 @@ const NoteCardModal = (modalProps: ModalProps) => {
         pinned: pinned,
       })
     )
+
+    // setEditorState(content);
+    // let contentTextEd = editorState.getCurrentContent().getPlainText("\u0001");
+    // setValue(contentTextEd);
+    // console.log(contentTextEd);
+    // dispatch(
+    //   editNote({
+    //     id: note.id,
+    //     title: text,
+    //     content: contentTextEd,
+    //     pinned: pinned,
+    //   })
+    // )
   }
 
   const handlePin = () => {
@@ -281,6 +306,22 @@ const NoteCardModal = (modalProps: ModalProps) => {
     setSelectedOptionColor(color)
   }
 
+  const handleChatGPT = async (e: any) => {
+    if (e.key=== "Enter"){
+      if (value.includes(promptGPT)){
+        let index = value.indexOf(promptGPT )  + promptGPT.length;
+        let promptText = value.slice(index);
+  
+        const data = await sendMessage(promptText);
+        const gptResponse= await  data.data.openai.message[1].message
+        setValue(gptResponse);
+
+      }
+  
+    }
+
+  }
+
   const imageStyle: CSS.Properties = {
     backgroundImage: `${
       selectedImage !== "bg-white" ? `url(${selectedImage}` : "bg-white"
@@ -305,13 +346,13 @@ const NoteCardModal = (modalProps: ModalProps) => {
       >
         <div className="pl-6 pr-4 pt-2 ">
           <div
-            className="flex items-center justify-between px-2"
+            className="flex items-ce<nter justify-between px-2"
             onClick={handleClick}
           >
             {isEditing ? (
               <input
                 size={47}
-                className="mb-2 text-xl font-bold"
+                className="mb-2 text-xl bg-transparent	outline-none font-bold"
                 type="text"
                 value={text}
                 onChange={handleChange}
@@ -344,8 +385,11 @@ const NoteCardModal = (modalProps: ModalProps) => {
               formats={formats}
               value={value}
               onChange={handleProcedureContentChange}
+              onKeyDown={handleChatGPT}
               className="bg-white"
-            />
+              />
+        
+            
           </div>
         </div>
         <div className="flex justify-end  px-6 pt-2">
@@ -371,9 +415,9 @@ const NoteCardModal = (modalProps: ModalProps) => {
             />
           </div>
 
-          <div className="ml-auto px-6   pt-1 ">
+          <div className="ml-auto px-6  pb-1 pt-1 ">
             <button
-              className="justify-end rounded bg-transparent px-4 py-2  font-semibold text-slate-900  hover:border-transparent hover:bg-gray-100"
+              className="justify-end rounded bg-transparent px-4 py-2  font-semibold text-slate-900  hover:border-transparent hover:bg-slate-500/10"
               onClick={() => modalProps.onClose()}
             >
               Close
