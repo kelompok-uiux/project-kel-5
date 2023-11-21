@@ -66,6 +66,9 @@ const AddNoteBar = () => {
   }
 
   const handleAddNote = () => {
+    console.log(newNote)
+    if (!newNote.title || !newNote.content || newNote.content === "<p><br></p>")
+      return
     setIsFocused(false)
     setNewNote(emptyNote)
     dispatch(addNote(newNote))
@@ -126,7 +129,11 @@ const AddNoteBar = () => {
               />
               <FiPlus
                 onClick={handleAddNote}
-                title="Add note"
+                title={
+                  newNote.title && newNote.content
+                    ? "Add note"
+                    : "Note is empty"
+                }
                 className={`h-6 w-6 cursor-pointer text-black/75 hover:text-blue-500`}
               />
             </div>
