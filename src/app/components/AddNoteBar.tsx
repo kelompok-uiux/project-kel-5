@@ -61,14 +61,16 @@ const AddNoteBar = () => {
   const [isFocused, setIsFocused] = useState(false)
   const dispatch = useAppDispatch()
 
+  const isNoteEmpty =
+    !newNote.title || !newNote.content || newNote.content === "<p><br></p>"
+
   const handleFocus = () => {
     setIsFocused(true)
   }
 
   const handleAddNote = () => {
     console.log(newNote)
-    if (!newNote.title || !newNote.content || newNote.content === "<p><br></p>")
-      return
+    if (isNoteEmpty) return
     setIsFocused(false)
     setNewNote(emptyNote)
     dispatch(addNote(newNote))
@@ -129,11 +131,7 @@ const AddNoteBar = () => {
               />
               <FiPlus
                 onClick={handleAddNote}
-                title={
-                  newNote.title && newNote.content
-                    ? "Add note"
-                    : "Note is empty"
-                }
+                title={!isNoteEmpty ? "Add note" : "Note is empty"}
                 className={`h-6 w-6 cursor-pointer text-black/75 hover:text-blue-500`}
               />
             </div>
