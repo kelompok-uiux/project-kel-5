@@ -150,11 +150,6 @@ const NoteCard = (props: NoteData) => {
             className="h-4 w-4 cursor-pointer text-black/75  hover:text-blue-500"
           />
         </div>
-
-        <p
-          dangerouslySetInnerHTML={{ __html: props.content as any }}
-          className="ql-editor block font-sans text-base  leading-relaxed text-inherit antialiased "
-        ></p>
         <div>
           <AiFillPushpin
             title="Pin note"
