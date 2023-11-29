@@ -338,7 +338,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
   return (
     // inset-0 items-center justify-center
     <div
-      className=" fixed inset-0 z-10  flex flex-col items-center justify-center overflow-y-auto  bg-black bg-opacity-25 "
+      className=" fixed inset-0 z-10  flex flex-col  overflow-y-auto  bg-black bg-opacity-25 "
       id="wrapper"
       onClick={handleClose}
     >
@@ -437,7 +437,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
         </div>
       </div>
       {backgroundPick && images ? (
-        <div className="w-84 relative z-10  flex h-auto flex-col justify-center overflow-hidden rounded-xl bg-gray-50 ">
+        <div className=" bg-opacity-25 mt-64 top-72 w-84 relative z-10  flex h-auto flex-col justify-center overflow-hidden rounded-xl bg-gray-50 ">
           <div className="mx-auto max-w-7xl">
             <div className="group relative">
               <div className="absolute -inset-1 rounded-lg opacity-25 blur  "></div>
