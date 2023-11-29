@@ -34,13 +34,16 @@ const TestComponent = () => {
   return (
     <div className={`text-black`}>
       <AddNoteBar />
-      <div className="flex flex-col">
+      <div className="ml-44 mt-10 flex flex-wrap gap-x-4 gap-y-4">
         {filteredNotes.map((note, index) => {
           return (
             <>
-              <div className="mb-8">
+              <div className="text-ellipsis">
                 <NoteCard
                   index={index}
+                  noteId={note.id}
+                  pinned={note.pinned}
+                  noteImage={note.noteImage}
                   title={note.title}
                   content={note.content}
                   clickModal={() =>
@@ -64,7 +67,6 @@ const TestComponent = () => {
             </>
           )
         })}
-
       </div>
     </div>
   )
