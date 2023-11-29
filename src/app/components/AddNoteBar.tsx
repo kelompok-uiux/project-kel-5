@@ -1,12 +1,12 @@
 "use client"
-import React, { useState, useRef, useEffect } from "react"
-import ReactQuill from "react-quill"
+import React, { useState, useEffect, useMemo } from "react"
 import "react-quill/dist/quill.snow.css"
 import { AiFillPushpin, AiOutlinePushpin } from "react-icons/ai"
 import { FiPlus } from "react-icons/fi"
 import { Note, addNote } from "@/features/note/noteSlice"
 import { format } from "path"
 import { useAppDispatch } from "@/hooks/hooks"
+import dynamic from "next/dynamic"
 
 const emptyNote = {
   title: "",
@@ -28,7 +28,7 @@ const myColors = [
 const modules = {
   toolbar: [
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
+    ["bold", "italic", "underline", "strike"],
     [{ align: ["right", "center", "justify"] }],
     [{ list: "ordered" }, { list: "bullet" }],
     ["link", "image"],
@@ -54,15 +54,24 @@ const formats = [
 ]
 
 const AddNoteBar = () => {
+  const ReactQuill = useMemo(
+    () => dynamic(() => import("react-quill"), { ssr: false }),
+    []
+  )
   const [newNote, setNewNote] = useState<Note>(emptyNote)
   const [isFocused, setIsFocused] = useState(false)
   const dispatch = useAppDispatch()
+
+  const isNoteEmpty =
+    !newNote.title || !newNote.content || newNote.content === "<p><br></p>"
 
   const handleFocus = () => {
     setIsFocused(true)
   }
 
   const handleAddNote = () => {
+    console.log(newNote)
+    if (isNoteEmpty) return
     setIsFocused(false)
     setNewNote(emptyNote)
     dispatch(addNote(newNote))
@@ -123,7 +132,7 @@ const AddNoteBar = () => {
               />
               <FiPlus
                 onClick={handleAddNote}
-                title="Add note"
+                title={!isNoteEmpty ? "Add note" : "Note is empty"}
                 className={`h-6 w-6 cursor-pointer text-black/75 hover:text-blue-500`}
               />
             </div>
@@ -132,7 +141,9 @@ const AddNoteBar = () => {
               modules={modules}
               formats={formats}
               value={newNote.content}
-              onChange={(value) => setNewNote({ ...newNote, content: value })}
+              onChange={(value: any) =>
+                setNewNote({ ...newNote, content: value })
+              }
               placeholder="Take a note..."
             />
           </div>

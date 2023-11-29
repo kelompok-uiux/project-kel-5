@@ -6,13 +6,6 @@ import AddNoteBar from "./AddNoteBar"
 import NoteCard from "./NoteCard"
 import NoteCardModal from "./NoteCardModal"
 
-const dummyNote = {
-  title: "test",
-  content: "test",
-  pinned: false,
-  modalIsOpen: false,
-}
-
 type ModalState = {
   noteId?: string
   show: boolean
@@ -56,15 +49,7 @@ const TestComponent = () => {
                 {showModal.show ? (
                   <div className="flex ">
                     <NoteCardModal
-                      // lastEdited={note.lastEdited}
-                      // pinned={note.pinned}
-                      // id={note.id}
-                      // index={index}
-                      // title={note.title}
-                      // content={note.content}
                       modalIsOpen={showModal}
-                      // noteImage={note.noteImage}
-                      // optionColor={note.optionColor}
                       onClose={() =>
                         setShowModal({ ...showModal, show: false })
                       }

@@ -1,23 +1,12 @@
 "use client"
-import {
-  Fragment,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react"
+import { ReactNode, useEffect, useMemo, useState } from "react"
 import dynamic from "next/dynamic"
 import moment from "moment"
-import ReactQuill from "react-quill"
-import { createPopper } from "@popperjs/core"
 import { useSelector } from "react-redux"
 
 import "react-quill/dist/quill.snow.css"
 import { useAppDispatch } from "@/hooks/hooks"
 import {
-  Note,
-  NoteState,
   changeNoteImage,
   changeOptionImage,
   editNote,
@@ -27,25 +16,17 @@ import {
 import { FaTrash, FaPalette } from "react-icons/fa"
 import { AiFillPushpin, AiOutlinePushpin } from "react-icons/ai"
 import CSS from "csstype"
-import music from "../../../public/backgroundImageNote/music.svg"
-import { Listbox, Popover, Transition } from "@headlessui/react"
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid"
 import React from "react"
+import { sendMessage } from "@/utils/sendMessage"
+import CursorSVG from "./icons/CursorSVG"
 
 type ModalProps = {
-  // id?: string
-  // index?: number
-  // title: string
-  // content: string
-  // pinned: boolean
   modalIsOpen?: {
     noteId?: string
     show: boolean
   }
-  // lastEdited?: string
+
   onClose: () => void
-  // noteImage?: string
-  // optionColor?: string
 }
 
 type ImageData = {
@@ -148,10 +129,6 @@ const optionColors = [
 ]
 
 const NoteCardModal = (modalProps: ModalProps) => {
-  if (!modalProps.modalIsOpen) {
-    return null
-  }
-
   const dispatch = useAppDispatch()
 
   const noteSelector = useSelector((state: any) => {
@@ -169,15 +146,28 @@ const NoteCardModal = (modalProps: ModalProps) => {
   const [lastedited, setLastEdited] = useState(date)
   const [backgroundPick, setBackgroundPick] = useState(false)
   const [selectedImage, setSelectedImage] = useState(note.noteImage)
+
   const [selectedOptionColor, setSelectedOptionColor] = useState(
     note.optionColor
   )
   const [value, setValue] = useState(note.content)
+  const [completedTyping, setCompletedTyping] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const ReactQuill = useMemo(
+    () => dynamic(() => import("react-quill"), { ssr: false }),
+    []
+  )
 
   // editing title
   const [isEditing, setIsEditing] = useState(false)
   const [text, setText] = useState(note.title)
   const [pinned, setPinned] = useState(note.pinned)
+
+  if (!modalProps.modalIsOpen) {
+    // jika modalNotecard tidak open return null
+    return null
+  }
 
   const myColors = [
     "purple",
@@ -186,15 +176,19 @@ const NoteCardModal = (modalProps: ModalProps) => {
     "#856325",
     "#963254",
     "#254563",
+    "#e5e7eb",
+    "#f1f5f9",
+    "#fafafa",
+    "#f9fafb",
+
     "white",
   ]
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
+      ["bold", "italic", "underline", "strike"],
       [{ align: ["right", "center", "justify"] }],
       [{ list: "ordered" }, { list: "bullet" }],
-      [{ script: "sub" }, { script: "super" }],
       ["link", "image"],
       [{ color: myColors }],
       [{ background: myColors }],
@@ -235,12 +229,12 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
   const handleBlur = () => {
     setIsEditing(false)
-
-    // Save the changes or perform any required actions here
   }
 
-  const handleProcedureContentChange = (content: any) => {
+  const handleProcedureContentChange = async (content: any) => {
     setValue(content)
+    console.log(value)
+    console.log(typeof value)
 
     dispatch(
       editNote({
@@ -259,6 +253,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
   const handleDeleteNote = () => {
     dispatch(removeNote(note.id))
+    modalProps.onClose()
   }
 
   const handleClose = (e: any) => {
@@ -278,6 +273,37 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
   const handleSetSelectedOptionColor = (color: any) => {
     setSelectedOptionColor(color)
+  }
+
+  const promptGPT = "@ChatGPT "
+
+  const handleChatGPT = async (e: any) => {
+    if (e.key === "Enter") {
+      if (value.includes(promptGPT)) {
+        let index = value.indexOf(promptGPT) + promptGPT.length
+        let promptText = value.slice(index)
+        setLoading(true)
+        let originalContent = value.slice(0, value.indexOf(promptGPT))
+        setValue(originalContent)
+
+        const data = await sendMessage(promptText)
+        const gptResponse = await data.data.openai.message[1].message
+
+        let i = 0
+        setCompletedTyping(false)
+        const intervalId = setInterval(() => {
+          setValue(originalContent + gptResponse.slice(0, i))
+
+          i++
+
+          if (i > gptResponse.length) {
+            clearInterval(intervalId)
+            setCompletedTyping(true)
+          }
+        }, 20)
+        setLoading(false)
+      }
+    }
   }
 
   const imageStyle: CSS.Properties = {
@@ -304,13 +330,13 @@ const NoteCardModal = (modalProps: ModalProps) => {
       >
         <div className="pl-6 pr-4 pt-2 ">
           <div
-            className="flex items-center justify-between px-2"
+            className="items-ce<nter flex justify-between px-2"
             onClick={handleClick}
           >
             {isEditing ? (
               <input
                 size={47}
-                className="mb-2 text-xl font-bold"
+                className="mb-2 bg-transparent text-xl	font-bold outline-none"
                 type="text"
                 value={text}
                 onChange={handleChange}
@@ -343,12 +369,19 @@ const NoteCardModal = (modalProps: ModalProps) => {
               formats={formats}
               value={value}
               onChange={handleProcedureContentChange}
+              onKeyDown={handleChatGPT}
               className="bg-white"
             />
           </div>
         </div>
-        <div className="flex justify-end  px-6 pt-2">
-          <span className="mb-2   mr-2 inline-block px-3  py-1 text-sm text-gray-700">
+        <div className="flex justify-between  px-6 pt-2">
+          {loading && (
+            <div className=" mb-4 translate-x-1/2 translate-y-1/2  transform">
+              <div className="h-4 w-4 animate-spin  rounded-full border-2 border-solid border-blue-400 border-t-transparent"></div>
+            </div>
+          )}
+
+          <span className="mb-2  ml-auto mr-2 inline-block px-3  py-1 text-sm text-gray-700">
             Edited {moment(lastedited).format(" MMMM D Y hh:mm")}
           </span>
         </div>
@@ -370,9 +403,9 @@ const NoteCardModal = (modalProps: ModalProps) => {
             />
           </div>
 
-          <div className="ml-auto px-6   pt-1 ">
+          <div className="ml-auto px-6  pb-1 pt-1 ">
             <button
-              className="justify-end rounded bg-transparent px-4 py-2  font-semibold text-slate-900  hover:border-transparent hover:bg-gray-100"
+              className="justify-end rounded bg-transparent px-4 py-2  font-semibold text-slate-900  hover:border-transparent hover:bg-slate-500/10"
               onClick={() => modalProps.onClose()}
             >
               Close
@@ -381,7 +414,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
         </div>
       </div>
       {backgroundPick && images ? (
-        <div className="w-84 relative z-10  flex h-auto flex-col justify-center overflow-hidden rounded rounded-xl bg-gray-50 ">
+        <div className="w-84 relative z-10  flex h-auto flex-col justify-center overflow-hidden rounded-xl bg-gray-50 ">
           <div className="mx-auto max-w-7xl">
             <div className="group relative">
               <div className="absolute -inset-1 rounded-lg opacity-25 blur  "></div>
