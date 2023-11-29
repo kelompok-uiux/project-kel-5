@@ -4,7 +4,8 @@ import "react-quill/dist/quill.snow.css"
 import { AiFillPushpin, AiOutlinePushpin } from "react-icons/ai"
 import { FiPlus } from "react-icons/fi"
 import { Note, addNote } from "@/features/note/noteSlice"
-import { useAppDispatch } from "@/hooks"
+import { format } from "path"
+import { useAppDispatch } from "@/hooks/hooks"
 import dynamic from "next/dynamic"
 
 const emptyNote = {
