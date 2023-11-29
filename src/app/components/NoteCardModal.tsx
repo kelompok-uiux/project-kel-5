@@ -12,7 +12,7 @@ import moment from "moment"
 import { useSelector } from "react-redux"
 
 import "react-quill/dist/quill.snow.css"
-import { useAppDispatch } from "@/hooks"
+import { useAppDispatch } from "@/hooks/hooks"
 import {
   changeNoteImage,
   changeOptionImage,

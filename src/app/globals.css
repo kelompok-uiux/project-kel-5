@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 /* Define the keyframes for the cursor animation */
 @keyframes flicker {
   0% {

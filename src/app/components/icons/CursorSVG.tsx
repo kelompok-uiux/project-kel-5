@@ -7,5 +7,5 @@ export default function CursorSVG() {
     >
       <rect x="10" y="6" width="4" height="12" fill="#fff" />
     </svg>
-  );
+  )
 }
