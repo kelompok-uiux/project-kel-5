@@ -139,7 +139,7 @@ const NoteCard = (props: NoteData) => {
       </h5>
 
       <p
-        dangerouslySetInnerHTML={{ __html: props.content as any }}
+        dangerouslySetInnerHTML={{ __html: props.content!.length >= 250 ?  props.content?.slice(0, 250) + "...":  props.content as any }}
         className="ql-editor block font-sans text-base leading-relaxed text-inherit antialiased"
       ></p>
 

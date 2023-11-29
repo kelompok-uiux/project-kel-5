@@ -338,7 +338,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
   return (
     // inset-0 items-center justify-center
     <div
-      className="fixed inset-0 z-30  flex flex-col items-center justify-center overflow-y-auto  bg-black bg-opacity-25 "
+      className="fixed inset-0 z-30  flex flex-col  overflow-y-auto  bg-black bg-opacity-25 "
       id="wrapper"
       onClick={handleClose}
     >
