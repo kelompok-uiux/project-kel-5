@@ -150,6 +150,20 @@ const NoteCardModal = (modalProps: ModalProps) => {
     note = noteSelector
   }
 
+  // gsap animation
+  const modalRef = useRef(null)
+
+  useLayoutEffect(() => {
+    gsap.to(modalRef.current, {
+      xPercent: -50,
+      left: "50%",
+      yPercent: -50,
+      top: "50%",
+      position: "absolute",
+      ease: "power3.out",
+    })
+  }, [])
+
   const date = new Date(note.lastEdited ? note.lastEdited : "")
   const [lastedited, setLastEdited] = useState(date)
   const [backgroundPick, setBackgroundPick] = useState(false)
@@ -321,20 +335,6 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
   const kosongStyle: CSS.Properties = {}
 
-  // gsap animation
-  const modalRef = useRef(null)
-
-  useLayoutEffect(() => {
-    gsap.to(modalRef.current, {
-      xPercent: -50,
-      left: "50%",
-      yPercent: -50,
-      top: "50%",
-      position: "absolute",
-      ease: "power3.out",
-    })
-  }, [])
-
   return (
     // inset-0 items-center justify-center
     <div
@@ -346,7 +346,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
         style={
           imageStyle.backgroundImage !== `bg-white` ? imageStyle : kosongStyle
         }
-        className={`m-4 max-w-xl rounded-t-xl  rounded-b-xl  pt-2 ${
+        className={`m-4 max-w-xl rounded-b-xl  rounded-t-xl  pt-2 ${
           imageStyle.backgroundImage === `bg-white` ? "bg-white" : ""
         }  shadow-lg`}
         ref={modalRef}
@@ -437,7 +437,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
         </div>
       </div>
       {backgroundPick && images ? (
-        <div className=" bg-opacity-25 mt-72 top-72 w-84 relative z-10  flex h-auto flex-col justify-center overflow-hidden rounded-xl bg-gray-50 ">
+        <div className=" w-84 relative top-72 z-10 mt-72 flex  h-auto flex-col justify-center overflow-hidden rounded-xl bg-gray-50 bg-opacity-25 ">
           <div className="mx-auto max-w-7xl">
             <div className="group relative">
               <div className="absolute -inset-1 rounded-lg opacity-25 blur  "></div>
