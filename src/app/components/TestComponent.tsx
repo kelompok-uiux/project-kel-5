@@ -20,16 +20,27 @@ type ModalState = {
 
 const TestComponent = () => {
   const dispatch = useAppDispatch()
+
+  const filter = useAppSelector((state) => state.note.filterString)
+  console.log("filterString:", filter)
+
   const notes = useAppSelector((state) => state.note.notes)
   const [showModal, setShowModal] = useState({
     show: false,
   } as ModalState)
 
+  // Filter notes based on the filter value
+  const filteredNotes = notes.filter(
+    (note) =>
+      note.title.toLowerCase().includes(filter.toLowerCase()) ||
+      note.content.toLowerCase().includes(filter.toLowerCase())
+  )
+
   return (
     <div className={`text-black`}>
       <AddNoteBar />
       <div className="flex flex-col">
-        {notes.map((note, index) => {
+        {filteredNotes.map((note, index) => {
           return (
             <>
               <div className="mb-8">
