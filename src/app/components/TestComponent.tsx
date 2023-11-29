@@ -1,7 +1,9 @@
 "use client"
+
 import { addNote } from "@/features/note/noteSlice"
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks"
 import React, { useState } from "react"
+
 import AddNoteBar from "./AddNoteBar"
 import NoteCard from "./NoteCard"
 import NoteCardModal from "./NoteCardModal"
@@ -62,6 +64,7 @@ const TestComponent = () => {
             </>
           )
         })}
+
       </div>
     </div>
   )
