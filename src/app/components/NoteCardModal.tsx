@@ -1,11 +1,18 @@
 "use client"
-import { ReactNode, useMemo, useState } from "react"
+import {
+  ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import dynamic from "next/dynamic"
 import moment from "moment"
 import { useSelector } from "react-redux"
 
 import "react-quill/dist/quill.snow.css"
-import { useAppDispatch } from "@/hooks"
+import { useAppDispatch } from "@/hooks/hooks"
 import {
   changeNoteImage,
   changeOptionImage,
@@ -18,6 +25,8 @@ import { AiFillPushpin, AiOutlinePushpin } from "react-icons/ai"
 import CSS from "csstype"
 import React from "react"
 import { sendMessage } from "@/utils/sendMessage"
+import CursorSVG from "./icons/CursorSVG"
+import gsap from "gsap"
 
 type ModalProps = {
   modalIsOpen?: {
@@ -141,6 +150,20 @@ const NoteCardModal = (modalProps: ModalProps) => {
     note = noteSelector
   }
 
+  // gsap animation
+  const modalRef = useRef(null)
+
+  useLayoutEffect(() => {
+    gsap.to(modalRef.current, {
+      xPercent: -50,
+      left: "50%",
+      yPercent: -50,
+      top: "50%",
+      position: "absolute",
+      ease: "power3.out",
+    })
+  }, [])
+
   const date = new Date(note.lastEdited ? note.lastEdited : "")
   const [lastedited, setLastEdited] = useState(date)
   const [backgroundPick, setBackgroundPick] = useState(false)
@@ -150,6 +173,8 @@ const NoteCardModal = (modalProps: ModalProps) => {
     note.optionColor
   )
   const [value, setValue] = useState(note.content)
+  const [completedTyping, setCompletedTyping] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const ReactQuill = useMemo(
     () => dynamic(() => import("react-quill"), { ssr: false }),
@@ -173,6 +198,11 @@ const NoteCardModal = (modalProps: ModalProps) => {
     "#856325",
     "#963254",
     "#254563",
+    "#e5e7eb",
+    "#f1f5f9",
+    "#fafafa",
+    "#f9fafb",
+
     "white",
   ]
   const modules = {
@@ -222,7 +252,6 @@ const NoteCardModal = (modalProps: ModalProps) => {
   const handleBlur = () => {
     setIsEditing(false)
   }
-  const promptGPT = "@ChatGPT "
 
   const handleProcedureContentChange = async (content: any) => {
     setValue(content)
@@ -266,15 +295,33 @@ const NoteCardModal = (modalProps: ModalProps) => {
     setSelectedOptionColor(color)
   }
 
+  const promptGPT = "@ChatGPT "
+
   const handleChatGPT = async (e: any) => {
     if (e.key === "Enter") {
       if (value.includes(promptGPT)) {
         let index = value.indexOf(promptGPT) + promptGPT.length
         let promptText = value.slice(index)
+        setLoading(true)
+        let originalContent = value.slice(0, value.indexOf(promptGPT))
+        setValue(originalContent)
 
         const data = await sendMessage(promptText)
         const gptResponse = await data.data.openai.message[1].message
-        setValue(gptResponse)
+
+        let i = 0
+        setCompletedTyping(false)
+        const intervalId = setInterval(() => {
+          setValue(originalContent + gptResponse.slice(0, i))
+
+          i++
+
+          if (i > gptResponse.length) {
+            clearInterval(intervalId)
+            setCompletedTyping(true)
+          }
+        }, 20)
+        setLoading(false)
       }
     }
   }
@@ -287,9 +334,11 @@ const NoteCardModal = (modalProps: ModalProps) => {
   }
 
   const kosongStyle: CSS.Properties = {}
+
   return (
+    // inset-0 items-center justify-center
     <div
-      className="fixed inset-0 z-10  flex flex-col items-center justify-center overflow-y-auto  bg-black bg-opacity-25 "
+      className=" fixed inset-0 z-10  flex flex-col  overflow-y-auto  bg-black bg-opacity-25 "
       id="wrapper"
       onClick={handleClose}
     >
@@ -297,9 +346,10 @@ const NoteCardModal = (modalProps: ModalProps) => {
         style={
           imageStyle.backgroundImage !== `bg-white` ? imageStyle : kosongStyle
         }
-        className={`m-4 max-w-xl rounded-xl  pt-2 ${
+        className={`m-4 max-w-xl rounded-b-xl  rounded-t-xl  pt-2 ${
           imageStyle.backgroundImage === `bg-white` ? "bg-white" : ""
         }  shadow-lg`}
+        ref={modalRef}
       >
         <div className="pl-6 pr-4 pt-2 ">
           <div
@@ -347,8 +397,14 @@ const NoteCardModal = (modalProps: ModalProps) => {
             />
           </div>
         </div>
-        <div className="flex justify-end  px-6 pt-2">
-          <span className="mb-2   mr-2 inline-block px-3  py-1 text-sm text-gray-700">
+        <div className="flex justify-between  px-6 pt-2">
+          {loading && (
+            <div className=" mb-4 translate-x-1/2 translate-y-1/2  transform">
+              <div className="h-4 w-4 animate-spin  rounded-full border-2 border-solid border-blue-400 border-t-transparent"></div>
+            </div>
+          )}
+
+          <span className="mb-2  ml-auto mr-2 inline-block px-3  py-1 text-sm text-gray-700">
             Edited {moment(lastedited).format(" MMMM D Y hh:mm")}
           </span>
         </div>
@@ -381,7 +437,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
         </div>
       </div>
       {backgroundPick && images ? (
-        <div className="w-84 relative z-10  flex h-auto flex-col justify-center overflow-hidden rounded-xl bg-gray-50 ">
+        <div className=" w-84 relative top-72 z-10 mt-72 flex  h-auto flex-col justify-center overflow-hidden rounded-xl bg-gray-50 bg-opacity-25 ">
           <div className="mx-auto max-w-7xl">
             <div className="group relative">
               <div className="absolute -inset-1 rounded-lg opacity-25 blur  "></div>

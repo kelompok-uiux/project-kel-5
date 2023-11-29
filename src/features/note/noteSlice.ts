@@ -13,16 +13,21 @@ export type Note = {
 
 export type NoteState = {
   notes: Note[]
+  filterString: string
 }
 
 const initialState: NoteState = {
   notes: [],
+  filterString: "",
 }
 
 const noteSlice = createSlice({
   name: "note",
   initialState,
   reducers: {
+    changeFilter: (state, action: PayloadAction<string>) => {
+      state.filterString = action.payload
+    },
     addNote: (state, action: PayloadAction<Note>) => {
       action.payload.content = action.payload.content.replace("<p>", "")
       action.payload.content = action.payload.content.replace("</p>", "")
@@ -88,6 +93,7 @@ const noteSlice = createSlice({
 })
 
 export const {
+  changeFilter,
   addNote,
   toggleModal,
   removeNote,

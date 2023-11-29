@@ -1,11 +1,22 @@
 "use client"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { BiSearch } from "react-icons/bi"
 import { PiListBold } from "react-icons/pi"
 import { IoIosArrowDown } from "react-icons/io"
 import { HiUserCircle } from "react-icons/hi"
+import useDebounce from "@/hooks/useDebouce"
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks"
+import { changeFilter } from "@/features/note/noteSlice"
 
 const Header = () => {
+  const [search, setSearch] = useState("")
+  const debouncedSearch = useDebounce(search, 500)
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(changeFilter(debouncedSearch))
+  }, [debouncedSearch])
+
   // Buat toogle dropdown hamburger list
   const handleClick = () => {
     const element = document.getElementById("navbar-search")
@@ -72,6 +83,7 @@ const Header = () => {
               id="search-navbar"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               placeholder="Search..."
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <button
@@ -99,6 +111,7 @@ const Header = () => {
               id="search-navbar"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               placeholder="Search..."
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <ul className="mt-4 flex flex-col rounded-lg border border-gray-100 bg-gray-50 p-4 font-medium rtl:space-x-reverse dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:p-0 md:dark:bg-gray-900">
@@ -107,7 +120,7 @@ const Header = () => {
                 onClick={dropdown}
                 id="dropdownNavbarLink"
                 data-dropdown-toggle="dropdownNavbar"
-                className="flex w-full items-center justify-between rounded px-3 py-2 text-gray-900 hover:bg-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:focus:text-white md:w-auto md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-blue-500"
+                className="flex w-full items-center justify-between rounded px-3 py-2 text-gray-900 hover:bg-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:focus:text-white md:w-auto md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-gray-400"
               >
                 <HiUserCircle className="me-2 h-8 w-8" />
                 Eren Jaeger
