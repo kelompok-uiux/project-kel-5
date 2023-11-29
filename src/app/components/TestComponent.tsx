@@ -1,6 +1,6 @@
 "use client"
 import { useAppDispatch, useAppSelector } from "@/hooks"
-import React, { useState } from "react"
+import React, { MutableRefObject, useEffect, useRef, useState } from "react"
 import AddNoteBar from "./AddNoteBar"
 import NoteCard from "./NoteCard"
 import NoteCardModal from "./NoteCardModal"
@@ -50,7 +50,10 @@ const TestComponent = () => {
             </>
           )
         })}
-
+        {/* 
+        <div className="card my-32" ref={noteRef}>
+            asdsadadssa
+        </div> */}
       </div>
     </div>
   )

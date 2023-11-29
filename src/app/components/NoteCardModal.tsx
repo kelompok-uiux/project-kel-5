@@ -1,5 +1,12 @@
 "use client"
-import { ReactNode, useEffect, useMemo, useState } from "react"
+import {
+  ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import dynamic from "next/dynamic"
 import moment from "moment"
 import { useSelector } from "react-redux"
@@ -19,6 +26,7 @@ import CSS from "csstype"
 import React from "react"
 import { sendMessage } from "@/utils/sendMessage"
 import CursorSVG from "./icons/CursorSVG"
+import gsap from "gsap"
 
 type ModalProps = {
   modalIsOpen?: {
@@ -233,8 +241,6 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
   const handleProcedureContentChange = async (content: any) => {
     setValue(content)
-    console.log(value)
-    console.log(typeof value)
 
     dispatch(
       editNote({
@@ -306,8 +312,6 @@ const NoteCardModal = (modalProps: ModalProps) => {
     }
   }
 
-
-
   const imageStyle: CSS.Properties = {
     backgroundImage: `${
       selectedImage !== "bg-white" ? `url(${selectedImage}` : "bg-white"
@@ -316,9 +320,25 @@ const NoteCardModal = (modalProps: ModalProps) => {
   }
 
   const kosongStyle: CSS.Properties = {}
+
+  // gsap animation
+  const modalRef = useRef(null)
+
+  useLayoutEffect(() => {
+    gsap.to(modalRef.current, {
+      xPercent: -50,
+      left: "50%",
+      yPercent: -50,
+      top: "50%",
+      position: "absolute",
+      ease: "power3.out",
+    })
+  }, [])
+
   return (
+    // inset-0 items-center justify-center
     <div
-      className="fixed inset-0 z-10  flex flex-col items-center justify-center overflow-y-auto  bg-black bg-opacity-25 "
+      className=" fixed inset-0 z-10  flex flex-col items-center justify-center overflow-y-auto  bg-black bg-opacity-25 "
       id="wrapper"
       onClick={handleClose}
     >
@@ -326,9 +346,10 @@ const NoteCardModal = (modalProps: ModalProps) => {
         style={
           imageStyle.backgroundImage !== `bg-white` ? imageStyle : kosongStyle
         }
-        className={`m-4 max-w-xl rounded-xl  pt-2 ${
+        className={`m-4 max-w-xl rounded-t-xl  rounded-b-xl  pt-2 ${
           imageStyle.backgroundImage === `bg-white` ? "bg-white" : ""
         }  shadow-lg`}
+        ref={modalRef}
       >
         <div className="pl-6 pr-4 pt-2 ">
           <div
