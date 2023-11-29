@@ -1,5 +1,5 @@
 "use client"
-import { ReactNode, useMemo, useState } from "react"
+import { ReactNode, useEffect, useMemo, useState } from "react"
 import dynamic from "next/dynamic"
 import moment from "moment"
 import { useSelector } from "react-redux"
@@ -18,6 +18,7 @@ import { AiFillPushpin, AiOutlinePushpin } from "react-icons/ai"
 import CSS from "csstype"
 import React from "react"
 import { sendMessage } from "@/utils/sendMessage"
+import CursorSVG from "./icons/CursorSVG"
 
 type ModalProps = {
   modalIsOpen?: {
@@ -150,6 +151,8 @@ const NoteCardModal = (modalProps: ModalProps) => {
     note.optionColor
   )
   const [value, setValue] = useState(note.content)
+  const [completedTyping, setCompletedTyping] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const ReactQuill = useMemo(
     () => dynamic(() => import("react-quill"), { ssr: false }),
@@ -173,6 +176,11 @@ const NoteCardModal = (modalProps: ModalProps) => {
     "#856325",
     "#963254",
     "#254563",
+    "#e5e7eb",
+    "#f1f5f9",
+    "#fafafa",
+    "#f9fafb",
+
     "white",
   ]
   const modules = {
@@ -222,10 +230,11 @@ const NoteCardModal = (modalProps: ModalProps) => {
   const handleBlur = () => {
     setIsEditing(false)
   }
-  const promptGPT = "@ChatGPT "
 
   const handleProcedureContentChange = async (content: any) => {
     setValue(content)
+    console.log(value)
+    console.log(typeof value)
 
     dispatch(
       editNote({
@@ -266,18 +275,38 @@ const NoteCardModal = (modalProps: ModalProps) => {
     setSelectedOptionColor(color)
   }
 
+  const promptGPT = "@ChatGPT "
+
   const handleChatGPT = async (e: any) => {
     if (e.key === "Enter") {
       if (value.includes(promptGPT)) {
         let index = value.indexOf(promptGPT) + promptGPT.length
         let promptText = value.slice(index)
+        setLoading(true)
+        let originalContent = value.slice(0, value.indexOf(promptGPT))
+        setValue(originalContent)
 
         const data = await sendMessage(promptText)
         const gptResponse = await data.data.openai.message[1].message
-        setValue(gptResponse)
+
+        let i = 0
+        setCompletedTyping(false)
+        const intervalId = setInterval(() => {
+          setValue(originalContent + gptResponse.slice(0, i))
+
+          i++
+
+          if (i > gptResponse.length) {
+            clearInterval(intervalId)
+            setCompletedTyping(true)
+          }
+        }, 20)
+        setLoading(false)
       }
     }
   }
+
+
 
   const imageStyle: CSS.Properties = {
     backgroundImage: `${
@@ -347,8 +376,14 @@ const NoteCardModal = (modalProps: ModalProps) => {
             />
           </div>
         </div>
-        <div className="flex justify-end  px-6 pt-2">
-          <span className="mb-2   mr-2 inline-block px-3  py-1 text-sm text-gray-700">
+        <div className="flex justify-between  px-6 pt-2">
+          {loading && (
+            <div className=" mb-4 translate-x-1/2 translate-y-1/2  transform">
+              <div className="h-4 w-4 animate-spin  rounded-full border-2 border-solid border-blue-400 border-t-transparent"></div>
+            </div>
+          )}
+
+          <span className="mb-2  ml-auto mr-2 inline-block px-3  py-1 text-sm text-gray-700">
             Edited {moment(lastedited).format(" MMMM D Y hh:mm")}
           </span>
         </div>

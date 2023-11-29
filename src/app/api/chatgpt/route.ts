@@ -17,7 +17,7 @@ export async function POST(request: Request, ) {
       attributes_as_list: false,
       show_original_response: false,
       temperature: 0,
-      max_tokens: 600,
+      max_tokens: 500,
       providers: 'openai',
       text: messages
     })
