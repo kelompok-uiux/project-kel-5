@@ -86,15 +86,10 @@ const images: ImageData[] = [
 // (component: string) => any
 const NoteCard = (props: NoteData) => {
   const dispatch = useAppDispatch()
-  const [pinned, setPinned] = useState(props.pinned)
 
-  const handleDeleteNote = () => {
+  const handleDeleteNote = (e: any) => {
+    handleDeleteElementClick(e)
     dispatch(removeNote(props.noteId))
-  }
-
-  const handlePin = () => {
-    setPinned(!pinned)
-    dispatch(toggleNotePin(props.noteId))
   }
 
   const noteSelector = useSelector((state: any) => {
@@ -106,7 +101,15 @@ const NoteCard = (props: NoteData) => {
     note = noteSelector
   }
 
-  const [selectedImage, setSelectedImage] = useState(props.noteImage)
+  const [pinned, setPinned] = useState(note.pinned)
+
+  const handlePin = (e: any) => {
+    e.stopPropagation()
+    setPinned(!pinned)
+    dispatch(toggleNotePin(note.noteId))
+  }
+
+  const [selectedImage, setSelectedImage] = useState(note.noteImage)
 
   const selectImage = (image: any) => {
     setSelectedImage(image)
@@ -121,6 +124,10 @@ const NoteCard = (props: NoteData) => {
   }
 
   const kosongStyle: any = {}
+
+  const handleDeleteElementClick = (e: any) => {
+    e.stopPropagation()
+  }
 
   return (
     <div
@@ -139,28 +146,33 @@ const NoteCard = (props: NoteData) => {
       </h5>
 
       <p
-        dangerouslySetInnerHTML={{ __html: props.content!.length >= 250 ?  props.content?.slice(0, 250) + "...":  props.content as any }}
+        dangerouslySetInnerHTML={{
+          __html:
+            props.content!.length >= 250
+              ? props.content?.slice(0, 250) + "..."
+              : (props.content as any),
+        }}
         className="ql-editor block font-sans text-base leading-relaxed text-inherit antialiased"
       ></p>
 
       <div className="relative flex items-center justify-start p-4">
         <div className="z-20 p-4">
           <FaTrash
-            onClick={handleDeleteNote}
+            onClick={(e: any) => handleDeleteNote(e)}
             className="h-4 w-4 cursor-pointer text-black/75  hover:text-blue-500"
           />
         </div>
         <div>
           <AiFillPushpin
             title="Pin note"
-            onClick={handlePin}
+            onClick={(e: any) => handlePin(e)}
             className={`h-6 w-6 cursor-pointer text-black/75 hover:text-blue-500 ${
               !pinned && "hidden"
             }`}
           />
           <AiOutlinePushpin
             title="Pin note"
-            onClick={handlePin}
+            onClick={(e: any) => handlePin(e)}
             className={`h-6 w-6 cursor-pointer text-black/75 hover:text-blue-500 ${
               pinned && "hidden"
             }`}
