@@ -70,7 +70,7 @@ const Header = () => {
       <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
         <a href="#" className="flex items-center space-x-3 rtl:space-x-reverse">
           <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
-            MyNotes
+            Snap Notes
           </span>
         </a>
         <div className="flex md:order-1">
@@ -123,7 +123,7 @@ const Header = () => {
                 className="flex w-full items-center justify-between rounded px-3 py-2 text-gray-900 hover:bg-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:focus:text-white md:w-auto md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-gray-400"
               >
                 <HiUserCircle className="me-2 h-8 w-8" />
-                Eren Jaeger
+                Joko
                 <IoIosArrowDown className="ms-2.5" />
               </button>
               <div

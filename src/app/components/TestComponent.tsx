@@ -17,7 +17,6 @@ const TestComponent = () => {
   const dispatch = useAppDispatch()
 
   const filter = useAppSelector((state) => state.note.filterString)
-  console.log("filterString:", filter)
 
   const notes = useAppSelector((state) => state.note.notes)
   const [showModal, setShowModal] = useState({
@@ -30,6 +29,7 @@ const TestComponent = () => {
       note.title.toLowerCase().includes(filter.toLowerCase()) ||
       note.content.toLowerCase().includes(filter.toLowerCase())
   )
+
 
   return (
     <div className={`text-black`}>
@@ -49,6 +49,9 @@ const TestComponent = () => {
                   clickModal={() =>
                     setShowModal({ noteId: note.id, show: true })
                   }
+                  // onClose={() =>
+                  //   setShowModal({ noteId: note.id, ...showModal, show: false })
+                  // }
                 />
 
                 {showModal.show ? (
@@ -56,7 +59,11 @@ const TestComponent = () => {
                     <NoteCardModal
                       modalIsOpen={showModal}
                       onClose={() =>
-                        setShowModal({ ...showModal, show: false })
+                        setShowModal({
+                    
+                          ...showModal,
+                          show: false,
+                        })
                       }
                     />
                   </div>

@@ -42,101 +42,101 @@ type ImageData = {
   image: string
 }
 
-const images: ImageData[] = [
-  {
-    name: "default",
-    image: "bg-white",
-  },
-  {
-    name: "recipes",
-    image:
-      "https://www.gstatic.com/keep/backgrounds/recipe_light_thumb_0615.svg",
-  },
-  {
-    name: "places",
-    image:
-      "https://www.gstatic.com/keep/backgrounds/places_light_thumb_0615.svg",
-  },
-  {
-    name: "groceries",
-    image:
-      "https://www.gstatic.com/keep/backgrounds/grocery_light_thumb_0615.svg",
-  },
-  {
-    name: "food",
-    image: "https://www.gstatic.com/keep/backgrounds/food_light_thumb_0615.svg",
-  },
-  {
-    name: "music",
-    image:
-      "https://www.gstatic.com/keep/backgrounds/music_light_thumb_0615.svg",
-  },
-  {
-    name: "notes",
-    image:
-      "https://www.gstatic.com/keep/backgrounds/notes_light_thumb_0615.svg",
-  },
-  {
-    name: "travel",
-    image:
-      "https://www.gstatic.com/keep/backgrounds/travel_light_thumb_0615.svg",
-  },
-  {
-    name: "video",
-    image:
-      "https://www.gstatic.com/keep/backgrounds/video_light_thumb_0615.svg",
-  },
-  {
-    name: "celebration",
-    image:
-      "https://www.gstatic.com/keep/backgrounds/celebration_light_thumb_0715.svg",
-  },
-]
-
 type OptionColorData = {
   color: string
 }
 
-const optionColors = [
-  {
-    color: "bg-white",
-  },
-  {
-    color: "bg-[#faafa8]",
-  },
-  {
-    color: "bg-[#f39f76]",
-  },
-  {
-    color: "bg-[#fff8b8]",
-  },
-  {
-    color: "bg-[#e2f6d3]",
-  },
-  {
-    color: "bg-[#b4ddd3]",
-  },
-  {
-    color: "bg-[#d4e4ed]",
-  },
-  {
-    color: "bg-[#aeccdc]",
-  },
-  {
-    color: "bg-[#d3bfdb]",
-  },
-  {
-    color: "bg-[#f6e2dd]",
-  },
-  {
-    color: "bg-[#e9e3d4]",
-  },
-  {
-    color: "bg-[#efeff1]",
-  },
-]
-
 const NoteCardModal = (modalProps: ModalProps) => {
+  const optionColors = [
+    {
+      color: "bg-white",
+    },
+    {
+      color: "bg-[#faafa8]",
+    },
+    {
+      color: "bg-[#f39f76]",
+    },
+    {
+      color: "bg-[#fff8b8]",
+    },
+    {
+      color: "bg-[#e2f6d3]",
+    },
+    {
+      color: "bg-[#b4ddd3]",
+    },
+    {
+      color: "bg-[#d4e4ed]",
+    },
+    {
+      color: "bg-[#aeccdc]",
+    },
+    {
+      color: "bg-[#d3bfdb]",
+    },
+    {
+      color: "bg-[#f6e2dd]",
+    },
+    {
+      color: "bg-[#e9e3d4]",
+    },
+    {
+      color: "bg-[#efeff1]",
+    },
+  ]
+  const images: ImageData[] = [
+    {
+      name: "default",
+      image: "bg-white",
+    },
+    {
+      name: "recipes",
+      image:
+        "https://www.gstatic.com/keep/backgrounds/recipe_light_thumb_0615.svg",
+    },
+    {
+      name: "places",
+      image:
+        "https://www.gstatic.com/keep/backgrounds/places_light_thumb_0615.svg",
+    },
+    {
+      name: "groceries",
+      image:
+        "https://www.gstatic.com/keep/backgrounds/grocery_light_thumb_0615.svg",
+    },
+    {
+      name: "food",
+      image:
+        "https://www.gstatic.com/keep/backgrounds/food_light_thumb_0615.svg",
+    },
+    {
+      name: "music",
+      image:
+        "https://www.gstatic.com/keep/backgrounds/music_light_thumb_0615.svg",
+    },
+    {
+      name: "notes",
+      image:
+        "https://www.gstatic.com/keep/backgrounds/notes_light_thumb_0615.svg",
+    },
+    {
+      name: "travel",
+      image:
+        "https://www.gstatic.com/keep/backgrounds/travel_light_thumb_0615.svg",
+    },
+    {
+      name: "video",
+      image:
+        "https://www.gstatic.com/keep/backgrounds/video_light_thumb_0615.svg",
+    },
+    {
+      name: "celebration",
+      image:
+        "https://www.gstatic.com/keep/backgrounds/celebration_light_thumb_0715.svg",
+    },
+  ]
+
   const dispatch = useAppDispatch()
 
   const noteSelector = useSelector((state: any) => {
@@ -343,6 +343,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
       onClick={handleClose}
     >
       <div
+        role="note-image"
         style={
           imageStyle.backgroundImage !== `bg-white` ? imageStyle : kosongStyle
         }
@@ -354,6 +355,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
         <div className="pl-6 pr-4 pt-2 ">
           <div
             className="items-ce<nter flex justify-between px-2"
+            role="title-div"
             onClick={handleClick}
           >
             {isEditing ? (
@@ -362,6 +364,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
                 className="mb-2 bg-transparent text-xl	font-bold outline-none"
                 type="text"
                 value={text}
+                role="title-input"
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -371,6 +374,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
             <AiFillPushpin
               title="Pin note"
+              role="pin-false"
               onClick={handlePin}
               className={`h-6 w-6 cursor-pointer text-black/75 hover:text-blue-500 ${
                 !pinned && "hidden"
@@ -378,6 +382,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
             />
             <AiOutlinePushpin
               title="Pin note"
+              role="pin-true"
               onClick={handlePin}
               className={`h-6 w-6 cursor-pointer text-black/75 hover:text-blue-500 ${
                 pinned && "hidden"
@@ -388,6 +393,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
           <div className="mt-1 ">
             <ReactQuill
               theme="snow"
+              placeholder="reactQuill"
               modules={modules}
               formats={formats}
               value={value}
@@ -491,6 +497,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
                       return (
                         <>
                           <button
+                            role="change-background"
                             className={`h-10 w-10  rounded-full border-2 ${
                               selectedImage === image.image
                                 ? "border-purple-500"
