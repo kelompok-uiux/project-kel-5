@@ -47,6 +47,15 @@ type OptionColorData = {
 }
 
 const NoteCardModal = (modalProps: ModalProps) => {
+  const dispatch = useAppDispatch()
+
+  const noteSelector = useSelector((state: any) => {
+    return state.note.notes.find(
+      (note: any) => note.id === modalProps.modalIsOpen?.noteId
+    )
+  })
+
+  /// background
   const optionColors = [
     {
       color: "bg-white",
@@ -137,14 +146,6 @@ const NoteCardModal = (modalProps: ModalProps) => {
     },
   ]
 
-  const dispatch = useAppDispatch()
-
-  const noteSelector = useSelector((state: any) => {
-    return state.note.notes.find(
-      (note: any) => note.id === modalProps.modalIsOpen?.noteId
-    )
-  })
-
   let note: any
   if (noteSelector) {
     note = noteSelector
@@ -186,7 +187,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
   const [text, setText] = useState(note.title)
   const [pinned, setPinned] = useState(note.pinned)
 
-  if (!modalProps.modalIsOpen) {
+  if (!modalProps.modalIsOpen?.show) {
     // jika modalNotecard tidak open return null
     return null
   }
@@ -343,7 +344,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
       onClick={handleClose}
     >
       <div
-        role="note-image"
+        role="note-card"
         style={
           imageStyle.backgroundImage !== `bg-white` ? imageStyle : kosongStyle
         }
@@ -434,6 +435,7 @@ const NoteCardModal = (modalProps: ModalProps) => {
 
           <div className="ml-auto px-6  pb-1 pt-1 ">
             <button
+              role="close-modal"
               className="justify-end rounded bg-transparent px-4 py-2  font-semibold text-slate-900  hover:border-transparent hover:bg-slate-500/10"
               onClick={() => modalProps.onClose()}
             >
@@ -449,18 +451,19 @@ const NoteCardModal = (modalProps: ModalProps) => {
               <div className="absolute -inset-1 rounded-lg opacity-25 blur  "></div>
               <div className="items-top relative flex flex-col justify-start space-x-6 rounded-lg bg-white px-7 py-2 leading-none ring-1 ring-gray-900/5">
                 <div className="flex items-center justify-center space-x-2  py-2">
-                  {
-                    optionColors.map((color: OptionColorData) => {
-                      // ${color.color == "bg-white" && selectedOptionColor !== "bg-white" ? "border-2 border-slate-200":""}
+                  {optionColors.length !== 0
+                    ? (optionColors.map((color: OptionColorData) => {
+                        // ${color.color == "bg-white" && selectedOptionColor !== "bg-white" ? "border-2 border-slate-200":""}
 
-                      return (
-                        <>
-                          <button
-                            className={`h-10 w-10  rounded-full border-2 ${
-                              selectedOptionColor === color.color
-                                ? "border-purple-500"
-                                : "border-transparent"
-                            }
+                        return (
+                          <>
+                            <button
+                              role="optionColor"
+                              className={`h-10 w-10  rounded-full border-2 ${
+                                selectedOptionColor === color.color
+                                  ? "border-purple-500"
+                                  : "border-transparent"
+                              }
                             ${color.color}
                             ${
                               color.color == "bg-white" &&
@@ -469,20 +472,20 @@ const NoteCardModal = (modalProps: ModalProps) => {
                                 : ""
                             }
                             `}
-                            onClick={() => {
-                              handleSetSelectedOptionColor(color.color)
-                              dispatch(
-                                changeOptionImage({
-                                  id: note.id,
-                                  color: color.color,
-                                })
-                              )
-                            }}
-                          />
-                        </>
-                      )
-                    }) as ReactNode
-                  }
+                              onClick={() => {
+                                handleSetSelectedOptionColor(color.color)
+                                dispatch(
+                                  changeOptionImage({
+                                    id: note.id,
+                                    color: color.color,
+                                  })
+                                )
+                              }}
+                            />
+                          </>
+                        )
+                      }) as ReactNode)
+                    : ""}
                 </div>
 
                 <div className="flex items-center">

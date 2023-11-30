@@ -54,7 +54,7 @@ const noteSlice = createSlice({
       if (postYangMauDiedit) {
         postYangMauDiedit.title = title
         postYangMauDiedit.content = content
-        postYangMauDiedit.lastEdited = lastEdited
+        postYangMauDiedit.lastEdited = lastEdited.slice(0,10)
         postYangMauDiedit.pinned = pinned
       }
     },
